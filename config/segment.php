@@ -22,4 +22,10 @@ return [
      * when safe mode is off exceptions are thrown
      */
     'safe_mode' => env('SEGMENT_SAFE_MODE', true),
+
+    /**
+     * Should the Segment service ignore track & identify calls
+     * that doesn't have a user set
+     */
+    'ignore_events_without_user' => env('SEGMENT_IGNORE_MISSING_USER', true)
 ];

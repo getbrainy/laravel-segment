@@ -37,6 +37,10 @@ class SegmentService
 
     public function track(string $event, ?array $eventData = null): void
     {
+        if (! isset($this->globalUser) && $this->shouldIgnoreMissingUser()) {
+            return;
+        }
+
         $this->push(
             new SimpleSegmentEvent($this->globalUser, $event, $eventData)
         );
@@ -44,6 +48,10 @@ class SegmentService
 
     public function identify(?array $identifyData = null): void
     {
+        if (! isset($this->globalUser) && $this->shouldIgnoreMissingUser()) {
+            return;
+        }
+
         $this->push(
             new SimpleSegmentIdentify($this->globalUser, $identifyData)
         );
@@ -167,5 +175,10 @@ class SegmentService
     protected function inSafeMode(): bool
     {
         return filter_var($this->config['safe_mode'] ?? true, FILTER_VALIDATE_BOOL);
+    }
+
+    protected function shouldIgnoreMissingUser(): bool
+    {
+        return filter_var($this->config['ignore_events_without_user'] ?? true, FILTER_VALIDATE_BOOL);
     }
 }
